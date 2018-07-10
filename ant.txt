@@ -1,0 +1,27 @@
+        public static string buscarEnXML(string idempleado)
+        {
+            XDocument miXML = XDocument.Load(@"D:\\Documentos\\Visual Studio 2010\\Projects\\LeerXML\\Sob_219999830019_20150423_1.xml"); //Cargar el documento
+
+            XNamespace nsy = "http://cfe.dgi.gub.uy";
+
+            List<Item_Det_Fact> nombreusu = (from xml in miXML.Elements(nsy + "EnvioCFE_entreEmpresas").Elements(nsy + "CFE_Adenda").Elements(nsy + "CFE").Elements(nsy + "eFact").Elements(nsy + "Detalle").Elements(nsy + "Item")
+                                      select new Item_Det_Fact(
+
+
+                                            (int)xml.Element("NroLinDet"),
+                                            (string)xml.Element("CodItem"),
+                                            LIndicadorFacturaType.BuscarIndicadorFactura((int)xml.Element("IndFact")),
+                                            (string)xml.Element("NomItem"),
+                                            (string)xml.Element("DscItem"),
+                                            (int)xml.Element("Cantidad"),
+                                            LUnidadesDeMedida.BuscarUnidadDeMedida(1),
+                                            (decimal)xml.Element("PrecioUnitario")
+                                            )).ToList<Item_Det_Fact>();
+                                                  
+            string Message = "";
+            foreach (Item_Det_Fact minom in nombreusu)
+            {
+                Message += minom.ToString() +"\n"; //Mostramos un mensaje con el nombre del empleado que corresponde
+            }
+            return Message;
+        }
